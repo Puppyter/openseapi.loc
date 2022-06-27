@@ -14,7 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/get/nft',[OpenSeaListController::class,'display']);
+Route::get('/', [OpenSeaListController::class,'index'])->name('index');
+Route::post('/get/nft',[OpenSeaListController::class,'display'])->name('getNfts');
