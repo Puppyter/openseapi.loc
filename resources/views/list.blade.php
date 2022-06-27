@@ -7,7 +7,7 @@
                 @csrf
                 <div class="input-group mb-3">
                     <span class="input-group-text">Wallet number</span>
-                    <input type="text" name="wallet" class="form-control">
+                    <input type="text" name="wallet" class="form-control" required>
                     <button type="submit" class="btn btn-primary">Get</button>
                 </div>
             </form>
