@@ -25,7 +25,7 @@ class OpenSeaRepository
             }
         }
 
-        for ($i=0; $i<array_key_last($as); $i++){
+        for ($i=0; $i<63; $i++){
             $nfts[$i] =[
                 'img'=>$imgs[$i],
                 'a' => $as[$i],
