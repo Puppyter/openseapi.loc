@@ -7,7 +7,7 @@ include 'simple_html_dom.php';
 
 class OpenSeaRepository
 {
-    
+
     private function parsingAndPreparing(array $divs) :array
     {
         foreach ($divs as $div) {
@@ -25,7 +25,7 @@ class OpenSeaRepository
             }
         }
 
-        for ($i=0; $i<array_key_last($imgs); $i++){
+        for ($i=0; $i<array_key_last($as); $i++){
             $nfts[$i] =[
                 'img'=>$imgs[$i],
                 'a' => $as[$i],
