@@ -15,6 +15,6 @@ class OpenSeaListController extends Controller
 
     public function index()
     {
-        return response()->view('list',['nfts'=>null]);
+        return response()->view('list');
     }
 }
