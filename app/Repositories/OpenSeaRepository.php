@@ -42,9 +42,15 @@ class OpenSeaRepository
     {
         $curl_handle=curl_init();
         curl_setopt($curl_handle, CURLOPT_URL,"https://opensea.io/".$owner);
+        curl_setopt( $curl_handle, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+        curl_setopt( $curl_handle, CURLOPT_FOLLOWLOCATION, true );
+        curl_setopt( $curl_handle, CURLOPT_ENCODING, "" );
+        curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $curl_handle, CURLOPT_AUTOREFERER, true );
+        curl_setopt( $curl_handle, CURLOPT_SSL_VERIFYPEER, false );    # required for https urls
+        curl_setopt( $curl_handle, CURLOPT_MAXREDIRS, 10 );
         curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
         $query = curl_exec($curl_handle);
         dd($query);
         $html = str_get_html($query);
