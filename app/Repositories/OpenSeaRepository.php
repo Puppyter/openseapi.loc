@@ -25,7 +25,7 @@ class OpenSeaRepository
             }
         }
 
-        for ($i=0; $i<63; $i++){
+        for ($i=0; $i<array_key_last($as); $i++){
             $nfts[$i] =[
                 'img'=>$imgs[$i],
                 'a' => $as[$i],
@@ -46,7 +46,7 @@ class OpenSeaRepository
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
         $query = curl_exec($curl_handle);
-
+        dd($query);
         $html = str_get_html($query);
 
         $divs = $html->find('div[class=sc-1xf18x6-0 bSaLsG]');
