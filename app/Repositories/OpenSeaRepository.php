@@ -7,7 +7,7 @@ include 'simple_html_dom.php';
 
 class OpenSeaRepository
 {
-
+    
     private function parsingAndPreparing(array $divs) :array
     {
         foreach ($divs as $div) {
@@ -25,7 +25,7 @@ class OpenSeaRepository
             }
         }
 
-        for ($i=0; $i<array_key_last($as); $i++){
+        for ($i=0; $i<array_key_last($imgs); $i++){
             $nfts[$i] =[
                 'img'=>$imgs[$i],
                 'a' => $as[$i],
@@ -40,21 +40,13 @@ class OpenSeaRepository
 
     public function get(string $owner) :array
     {
-        $curlHandle=curl_init();
-        $cookie = tempnam ("/tmp", "CURLCOOKIE");
-        curl_setopt($curlHandle, CURLOPT_URL,"https://opensea.io/".$owner);
-        curl_setopt( $curlHandle, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
-        curl_setopt( $curlHandle, CURLOPT_COOKIEJAR, $cookie );
-        curl_setopt( $curlHandle, CURLOPT_FOLLOWLOCATION, true );
-        curl_setopt( $curlHandle, CURLOPT_ENCODING, "" );
-        curl_setopt( $curlHandle, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $curlHandle, CURLOPT_AUTOREFERER, true );
-        curl_setopt( $curlHandle, CURLOPT_SSL_VERIFYPEER, false );    # required for https urls
-        curl_setopt( $curlHandle, CURLOPT_MAXREDIRS, 10 );
-        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
-        $query = curl_exec($curlHandle);
-        dd($query);
+        $curl_handle=curl_init();
+        curl_setopt($curl_handle, CURLOPT_URL,"https://opensea.io/".$owner);
+        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
+        $query = curl_exec($curl_handle);
+
         $html = str_get_html($query);
 
         $divs = $html->find('div[class=sc-1xf18x6-0 bSaLsG]');
@@ -62,7 +54,7 @@ class OpenSeaRepository
         $nfts = $this->parsingAndPreparing($divs);
 
         $html->clear();
-        curl_close($curlHandle);
+        curl_close($curl_handle);
         return $nfts;
 
     }
