@@ -7,7 +7,20 @@ include 'simple_html_dom.php';
 
 class OpenSeaRepository
 {
-    
+
+    private $context;
+
+    public function __construct()
+    {
+        $this->context = stream_context_create(
+            array(
+                "http" => array(
+                    "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+                )
+            )
+        );
+    }
+
     private function parsingAndPreparing(array $divs) :array
     {
         foreach ($divs as $div) {
@@ -40,21 +53,14 @@ class OpenSeaRepository
 
     public function get(string $owner) :array
     {
-        $curl_handle=curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL,"https://opensea.io/".$owner);
-        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
-        $query = curl_exec($curl_handle);
-
-        $html = str_get_html($query);
+        $data = file_get_contents("https://opensea.io/".$owner,true,$this->context);
+        $html = str_get_html($data);
 
         $divs = $html->find('div[class=sc-1xf18x6-0 bSaLsG]');
 
         $nfts = $this->parsingAndPreparing($divs);
 
         $html->clear();
-        curl_close($curl_handle);
         return $nfts;
 
     }
