@@ -71,7 +71,7 @@ class OpenSeaRepository
 //            return false;
 //        }
         curl_close($curl);
-
+        dd($data);
         $html = str_get_html($data);
 
 
