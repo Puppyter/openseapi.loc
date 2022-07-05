@@ -12,13 +12,8 @@ class OpenSeaRepository
 
     public function __construct()
     {
-        $this->context = stream_context_create(
-            array(
-                "http" => array(
-                    "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-                )
-            )
-        );
+        $this->context = 'Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
+
     }
 
     private function parsingAndPreparing(array $divs) :array
@@ -57,12 +52,21 @@ class OpenSeaRepository
 
     public function get(string $owner)
     {
-        $data = file_get_contents("https://opensea.io/".$owner,false   ,$this->context);
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL,"https://opensea.io/".$owner);
+        curl_setopt($curl, CURLOPT_AUTOREFERER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_VERBOSE, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_USERAGENT, $this->context);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-        if (!in_array("HTTP/1.1 200 OK",$http_response_header)) {
-            return false;
-        }
+        $data = curl_exec($curl);
 
+        curl_close($curl);
         $html = str_get_html($data);
 
 
