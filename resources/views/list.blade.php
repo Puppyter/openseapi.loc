@@ -15,6 +15,9 @@
     </nav>
 @endsection
 @section('content')
+    @if(isset($message))
+        <p class="alert alert-danger">{{$message}}</p>
+    @endif
     @if(isset($nfts))
         <div class="row row-cols-6">
             @foreach($nfts as $nft)

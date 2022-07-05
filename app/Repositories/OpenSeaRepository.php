@@ -24,21 +24,25 @@ class OpenSeaRepository
     private function parsingAndPreparing(array $divs) :array
     {
         foreach ($divs as $div) {
-            foreach ($div->find("img [src]")as $img) {
-                $imgs[] = $img->attr['src'];
+            foreach ($div->find('img[src^=https]')as $img) {
+                $imgs[] = $img->src;
             }
-            foreach ($div->find("a[class=sc-1pie21o-0 elyzfO Asset--anchor]") as $a){
-                $as[] = $a->attr['href'];
+            foreach ($div->find("a[href*=/assets/ethereum]") as $a){
+                if ($a->href !=null)
+                $as[] = $a->href;
+
             }
-            foreach ($div->find('div[class=sc-7qr9y8-0 sc-nedjig-1 iUvoJs fyXutN]') as $name) {
+            foreach ($div->find('div[font-weight="600"]') as $name) {
                 $names[] = $name->plaintext;
             }
-            foreach ($div->find('div[class=sc-7qr9y8-0 sc-nedjig-1 iUvoJs eewaH]')as $creator) {
+            foreach ($div->find('div[role*=link] div[font-weight="400"]')as $creator) {
                 $creators[] = $creator->plaintext;
             }
         }
-
-        for ($i=0; $i<array_key_last($imgs); $i++){
+        $imgs = array_unique($imgs);
+        $as = array_unique($as);
+        $names = array_unique($names);
+        for ($i=0; $i<array_key_last($as); $i++){
             $nfts[$i] =[
                 'img'=>$imgs[$i],
                 'a' => $as[$i],
@@ -48,15 +52,22 @@ class OpenSeaRepository
             ];
         }
 
-        return $nfts;
+        return ($nfts);
     }
 
-    public function get(string $owner) :array
+    public function get(string $owner)
     {
-        $data = file_get_contents("https://opensea.io/".$owner,true,$this->context);
+        $data = @file_get_contents("https://opensea.io/".$owner,false   ,$this->context);
+
+        if (!in_array("HTTP/1.1 200 OK",$http_response_header)) {
+            return false;
+        }
+
         $html = str_get_html($data);
 
-        $divs = $html->find('div[class=sc-1xf18x6-0 bSaLsG]');
+
+        $divs = $html->find('div[role] article');
+
 
         $nfts = $this->parsingAndPreparing($divs);
 
