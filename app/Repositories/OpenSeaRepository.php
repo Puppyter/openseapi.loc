@@ -57,7 +57,7 @@ class OpenSeaRepository
 
     public function get(string $owner)
     {
-        $data = @file_get_contents("https://opensea.io/".$owner,false   ,$this->context);
+        $data = file_get_contents("https://opensea.io/".$owner,false   ,$this->context);
 
         if (!in_array("HTTP/1.1 200 OK",$http_response_header)) {
             return false;
