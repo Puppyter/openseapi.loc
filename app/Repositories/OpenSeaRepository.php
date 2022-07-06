@@ -65,13 +65,12 @@ class OpenSeaRepository
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         $data = curl_exec($curl);
-//        if (curl_getinfo($curl,CURLINFO_HTTP_CODE)!= 200)
-//        {
-//            curl_close($curl);
-//            return false;
-//        }
+        if (curl_getinfo($curl,CURLINFO_HTTP_CODE)!= 200)
+        {
+            curl_close($curl);
+            return false;
+        }
         curl_close($curl);
-        dd($data);
         $html = str_get_html($data);
 
 
